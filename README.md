@@ -2,12 +2,12 @@
 
 ### 1. Health check funcionando en Render
 
-![Health check funcionando en Render](./capturas/01-health-render.png)
+<img src="https://res.cloudinary.com/dahfnhc1h/image/upload/v1778874596/Captura_de_pantalla_2026-05-15_212128_j6wyye.png" alt="Health check funcionando en Render" width="900">
 
 ### 2. Logs visibles en Render
 
-![Logs visibles en Render](./capturas/02-logs-render.png)
+<img src="https://res.cloudinary.com/dahfnhc1h/image/upload/v1778874758/Captura_de_pantalla_2026-05-15_215228_pqlbfp.png" alt="Logs visibles en Render" width="900">
 
 ### 3. Workflow de GitHub Actions correcto
 
-![Workflow de GitHub Actions correcto](./capturas/04-github-actions-ok.png)
+<img src="https://res.cloudinary.com/dahfnhc1h/image/upload/v1778874463/Captura_de_pantalla_2026-05-15_214602_o4xdur.png" alt="Configuración del Health Check Path en Render" width="900">
