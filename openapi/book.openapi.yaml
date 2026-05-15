@@ -1,0 +1,236 @@
+openapi: 3.0.3
+info:
+  title: API Biblioteca - CRUD de libros
+  version: 1.0.0
+  description: Documento OpenAPI de las operaciones CRUD del modelo Book.
+servers:
+  - url: http://localhost:3000
+    description: Servidor local
+paths:
+  /books:
+    get:
+      summary: Obtener todos los libros
+      tags: [Books]
+      responses:
+        '200':
+          description: Lista de libros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      summary: Crear un libro
+      tags: [Books]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '201':
+          description: Libro creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /books/{id}:
+    get:
+      summary: Obtener un libro por id
+      tags: [Books]
+      parameters:
+        - $ref: '#/components/parameters/BookId'
+      responses:
+        '200':
+          description: Libro encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Id no válido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Libro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Actualizar un libro por id
+      tags: [Books]
+      parameters:
+        - $ref: '#/components/parameters/BookId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '200':
+          description: Libro actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Id o datos no válidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Libro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Eliminar un libro por id
+      tags: [Books]
+      parameters:
+        - $ref: '#/components/parameters/BookId'
+      responses:
+        '200':
+          description: Libro eliminado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Libro eliminado correctamente.
+        '400':
+          description: Id no válido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Libro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  parameters:
+    BookId:
+      name: id
+      in: path
+      required: true
+      description: Identificador MongoDB del libro
+      schema:
+        type: string
+        example: 66b8a9d0d9f0d6a29c5d1234
+  schemas:
+    Book:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 66b8a9d0d9f0d6a29c5d1234
+        title:
+          type: string
+          example: Cien años de soledad
+        genre:
+          type: string
+          enum: [novela, ensayo, poesia, tecnico]
+          example: novela
+        pages:
+          type: integer
+          minimum: 10
+          maximum: 2000
+          example: 471
+        publishedAt:
+          type: string
+          format: date-time
+          example: 1967-05-30T00:00:00.000Z
+        available:
+          type: boolean
+          example: true
+        author:
+          oneOf:
+            - type: string
+              example: 66b8a91fd9f0d6a29c5d0001
+            - $ref: '#/components/schemas/AuthorSummary'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    BookInput:
+      type: object
+      required: [title, genre, pages, author]
+      properties:
+        title:
+          type: string
+          minLength: 2
+          maxLength: 120
+          example: El nombre de la rosa
+        genre:
+          type: string
+          enum: [novela, ensayo, poesia, tecnico]
+          example: novela
+        pages:
+          type: integer
+          minimum: 10
+          maximum: 2000
+          example: 560
+        publishedAt:
+          type: string
+          format: date-time
+          example: 1980-01-01T00:00:00.000Z
+        available:
+          type: boolean
+          example: true
+        author:
+          type: string
+          description: ObjectId del autor
+          example: 66b8a91fd9f0d6a29c5d0001
+    AuthorSummary:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 66b8a91fd9f0d6a29c5d0001
+        name:
+          type: string
+          example: Umberto Eco
+        country:
+          type: string
+          example: Italia
+        status:
+          type: string
+          example: retirado
+        birthDate:
+          type: string
+          format: date-time
+        isAwarded:
+          type: boolean
+          example: true
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Validación fallida.
+        details:
+          type: array
+          items:
+            type: string
+          example:
+            - El título del libro es obligatorio.

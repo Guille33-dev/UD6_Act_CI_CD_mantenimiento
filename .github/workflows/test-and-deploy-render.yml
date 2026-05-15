@@ -1,0 +1,50 @@
+name: Tests and Render Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Revisar sintaxis
+        run: npm run check
+
+      - name: Ejecutar tests
+        run: npm test
+
+      - name: Paso extra - calcular cobertura de pruebas
+        run: npm run coverage
+
+      - name: Subir informe de cobertura como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+      - name: Desplegar en Render
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "No se ha configurado el secret RENDER_DEPLOY_HOOK_URL"
+            exit 1
+          fi
+          curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_URL"

@@ -1,0 +1,37 @@
+{
+  "name": "ud6-act-entrega-final",
+  "version": "1.0.0",
+  "description": "Actividad entregable UD6: GitHub Actions, Render deploy, health check, logs y cobertura de pruebas",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
+    "check": "node --check index.js && node --check db.js && node --check app.js && node --check routes/authRoutes.js && node --check routes/healthRoutes.js && node --check middlewares/authMiddleware.js && node --check middlewares/roleMiddleware.js && node --check middlewares/requestLogger.js && node --check models/User.js && node --check utils/logger.js",
+    "seed:admin": "node scripts/createAdmin.js",
+    "test": "node --test",
+    "coverage": "c8 --reporter=text --reporter=lcov node --test"
+  },
+  "keywords": [
+    "express",
+    "mongoose",
+    "dotenv",
+    "jwt",
+    "github-actions",
+    "render",
+    "health-check",
+    "logs",
+    "coverage"
+  ],
+  "author": "guillermo suarez",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.3"
+  },
+  "devDependencies": {
+    "c8": "^10.1.3"
+  }
+}
